@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">OpenWeatherMapTest</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_fragment">Empty Fragment</string>
+    <string name="home">home</string>
+    <string name="one">one</string>
+    <string name="two">two</string>
+    <string name="three">three</string>
+    <string name="four">four</string>
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:title="@string/home"
+        android:icon="@drawable/ic_home"/>
+    <item
+        android:id="@+id/one_dest"
+        android:title="@string/one"
+        android:icon="@drawable/ic_sun"
+
+        />
+    <item
+        android:id="@+id/one_dest"
+        android:title="@string/two"
+        android:icon="@drawable/ic_sun"
+        tools:ignore="DuplicateIds" />
+    <item
+        android:id="@+id/one_dest"
+        android:title="@string/three"
+        android:icon="@drawable/ic_sun"
+        tools:ignore="DuplicateIds" />
+    <item
+        android:id="@+id/one_dest"
+        android:title="@string/four"
+        android:icon="@drawable/ic_sun"
+        tools:ignore="DuplicateIds" />
+</menu>
