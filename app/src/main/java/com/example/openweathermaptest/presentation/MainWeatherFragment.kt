@@ -7,14 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.openweathermaptest.WeatherResult
 import com.example.openweathermaptest.WeatherViewModel
+import com.example.openweathermaptest.data.model.WeatherFiveDays
 import com.example.openweathermaptest.databinding.FragmentMainWeatherBinding
+import com.example.openweathermaptest.presentation.adapter.WeatherAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainWeatherFragment : Fragment() {
 
+    lateinit var adapter: WeatherAdapter
     private var _binding : FragmentMainWeatherBinding? = null
     private val binding get() = _binding!!
     private val weatherVM by viewModels<WeatherViewModel>()
@@ -25,6 +29,7 @@ class MainWeatherFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainWeatherBinding.inflate(inflater, container, false)
+        initAdapter()
         getWeather(	55.7522,37.6156)
 
         return binding.root
@@ -36,13 +41,21 @@ class MainWeatherFragment : Fragment() {
     private fun getWeather(lat:Double,lon:Double){
         weatherVM.getWeather(lat = lat,lon= lon)
         weatherVM.getWeather.observe(viewLifecycleOwner){weather->
-    when(weather){
+
+
+
+
+   when(weather){
 
         is WeatherResult.Success ->{
-            Log.d("MyLog",weather.toString())
+            adapter.submitList(listOf(weather.data))
+
+            Log.d("MyLog", weather.data.toString())
         }
 
-        is WeatherResult.Error ->{}
+        is WeatherResult.Error ->{
+            Log.d("MyLog",weather.message.toString())
+        }
 
         is WeatherResult.Loading -> {}
     }
@@ -52,6 +65,13 @@ class MainWeatherFragment : Fragment() {
     }
 
 
+    private fun initAdapter(){
+        adapter = WeatherAdapter()
+        val recyclerView = binding.recycler
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -59,6 +79,7 @@ class MainWeatherFragment : Fragment() {
 
 
     }
+
 
 
 }

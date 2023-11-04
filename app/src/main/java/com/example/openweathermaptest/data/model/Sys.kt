@@ -1,5 +1,8 @@
 package com.example.openweathermaptest.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Sys(
-    val pod: String
+    @SerializedName("pod")
+    val pod: String?
 )

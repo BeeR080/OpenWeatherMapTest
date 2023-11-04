@@ -1,5 +1,8 @@
 package com.example.openweathermaptest.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Clouds(
-    val all: Int
+    @SerializedName("all")
+    val all: Int?
 )

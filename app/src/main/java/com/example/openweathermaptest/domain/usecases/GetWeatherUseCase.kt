@@ -7,4 +7,6 @@ class GetWeatherUseCase @Inject constructor(private val repository: WeatherRepos
 
     suspend fun invoke(lat:Double,lon:Double)= repository.getWeather(lat = lat,lon = lon)
 
+
+
 }
