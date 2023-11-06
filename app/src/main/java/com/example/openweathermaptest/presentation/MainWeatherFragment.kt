@@ -13,6 +13,7 @@ import com.example.openweathermaptest.WeatherViewModel
 import com.example.openweathermaptest.data.model.WeatherFiveDays
 import com.example.openweathermaptest.databinding.FragmentMainWeatherBinding
 import com.example.openweathermaptest.presentation.adapter.WeatherAdapter
+import com.example.openweathermaptest.utills.DateUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,16 +42,16 @@ class MainWeatherFragment : Fragment() {
     private fun getWeather(lat:Double,lon:Double){
         weatherVM.getWeather(lat = lat,lon= lon)
         weatherVM.getWeather.observe(viewLifecycleOwner){weather->
-
+val list = weather.data!!.list.toList()
 
 
 
    when(weather){
 
         is WeatherResult.Success ->{
-            adapter.submitList(listOf(weather.data))
+            adapter.submitList(list)
 
-            Log.d("MyLog", weather.data.toString())
+
         }
 
         is WeatherResult.Error ->{

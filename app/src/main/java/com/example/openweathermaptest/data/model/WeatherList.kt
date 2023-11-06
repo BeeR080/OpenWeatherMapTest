@@ -3,7 +3,7 @@ package com.example.openweathermaptest.data.model
 import com.google.gson.annotations.SerializedName
 
 
-data class List(
+data class WeatherList(
     val clouds: Clouds?,
     @SerializedName("dt")
     val dt: Int?,

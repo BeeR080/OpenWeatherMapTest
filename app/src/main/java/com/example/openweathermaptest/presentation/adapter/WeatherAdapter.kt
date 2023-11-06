@@ -3,28 +3,30 @@ package com.example.openweathermaptest.presentation.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.openweathermaptest.R
-import com.example.openweathermaptest.data.model.WeatherFiveDays
+import com.example.openweathermaptest.data.model.WeatherList
 import com.example.openweathermaptest.databinding.WeatherListBinding
+import com.example.openweathermaptest.utills.DateUtils
 import com.example.openweathermaptest.utills.WeatherDiffUtil
 
-class WeatherAdapter(): ListAdapter<WeatherFiveDays,WeatherAdapter.MyViewHolder>(WeatherDiffUtil()) {
+class WeatherAdapter(): ListAdapter<WeatherList,WeatherAdapter.MyViewHolder>(WeatherDiffUtil()) {
 
 
 
    inner class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         private val binding = WeatherListBinding.bind(itemView)
 
-        fun bind(weatherFiveDays: WeatherFiveDays) = with(binding){
-            val currentItem = weatherFiveDays.list[adapterPosition]
-            mainfragTvDate.text = currentItem.dttTxt
-            mainfragTvHumidity.text = currentItem.main!!.humidity.toString()
-            mainfragTvTmin.text = currentItem.main.tempmin.toString()
-            mainfragTvTmax.text = currentItem.main.tempmax.toString()
-            mainfragTvPressure.text = currentItem.main.pressure.toString()
-            mainfragTvWindSpeed.text = currentItem.wind!!.speed.toString()
+        fun bind(weatherFiveDays: WeatherList) = with(binding){
+            val currentItem = currentList[adapterPosition]
+            mainfragTvDate.text = currentItem.dttTxt?.let { DateUtils.dateFormat(it) }
+            mainfragTvHumidity.text = "${currentItem.main!!.humidity} %"
+            mainfragTvTmin.text = "${currentItem.main.tempmin} °C"
+            mainfragTvTmax.text = "${currentItem.main.tempmax} °C"
+            mainfragTvPressure.text = "${currentItem.main.pressure} гПа"
+            mainfragTvWindSpeed.text = "${currentItem.wind!!.speed} м/c"
 
         }
 
@@ -45,7 +47,6 @@ class WeatherAdapter(): ListAdapter<WeatherFiveDays,WeatherAdapter.MyViewHolder>
 
 
     }
-
 
 
 

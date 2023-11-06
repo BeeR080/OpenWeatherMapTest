@@ -11,6 +11,8 @@ interface WeatherApi {
     suspend fun getWeather(
         @Query("lat") lat:Double,
         @Query("lon") lon:Double,
+        @Query("units") units:String = "metric",
+        @Query("lang") lang:String = "ru",
         @Query("appid") appid:String ="a6a1f5c8058a6a95902d7824996c8d2f"
     ):Response<WeatherFiveDays>
 }
