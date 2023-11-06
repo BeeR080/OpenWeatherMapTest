@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 
 object DateUtils {
 
-    fun dateFormat(date:String):String{
+    fun dateFormat(date:String?):String{
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val newSimpleDateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
         val date = simpleDateFormat.parse(date)

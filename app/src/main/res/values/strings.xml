@@ -8,4 +8,12 @@
     <string name="two">two</string>
     <string name="three">three</string>
     <string name="four">four</string>
+    <string name="pressure">Давление: </string>
+    <string name="humidity">Влажность: </string>
+    <string name="maxt">Максимальная температура: </string>
+    <string name="mint">Минимальная температура: </string>
+    <string name="wendspeed">Скорость ветра: </string>
+    <string name="tnow">Текущая температура: </string>
+    <string name="tfeelslike">Ощущается как: </string>
+    <string name="visibility">Видимость: </string>
 </resources>

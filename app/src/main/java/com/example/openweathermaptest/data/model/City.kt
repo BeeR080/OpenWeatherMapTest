@@ -1,7 +1,10 @@
 package com.example.openweathermaptest.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class City(
     @SerializedName("coord")
     val coord: Coord?,
@@ -19,4 +22,4 @@ data class City(
     val sunset: Int?,
     @SerializedName("timezone")
     val timezone: Int?
-)
+):Parcelable

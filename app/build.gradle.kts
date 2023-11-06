@@ -3,7 +3,11 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id ("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
+    id ("kotlin-parcelize")
+    id ("androidx.navigation.safeargs")
 }
+
+
 
 android {
     namespace = "com.example.openweathermaptest"
@@ -84,6 +88,10 @@ dependencies {
     kapt ("androidx.room:room-compiler:2.6.0")
     implementation ("androidx.room:room-ktx:2.6.0")
     androidTestImplementation ("androidx.room:room-testing:2.6.0")
+
+
+    //GPS
+    implementation ("com.google.android.gms:play-services-location:18.0.0")
 
 
 }

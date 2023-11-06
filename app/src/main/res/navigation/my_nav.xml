@@ -13,10 +13,22 @@
         <action
             android:id="@+id/one_dest"
             app:destination="@id/emptyFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailWeatherFragment"
+            app:destination="@id/detailWeatherFragment" />
     </fragment>
     <fragment
         android:id="@+id/emptyFragment"
         android:name="com.example.openweathermaptest.presentation.EmptyFragment"
         android:label="fragment_empty"
         tools:layout="@layout/fragment_empty" />
+    <fragment
+        android:id="@+id/detailWeatherFragment"
+        android:name="com.example.openweathermaptest.presentation.DetailWeatherFragment"
+        android:label="fragment_detail_weather"
+        tools:layout="@layout/fragment_detail_weather" >
+        <argument
+            android:name="currentWeather"
+            app:argType="com.example.openweathermaptest.data.model.WeatherList" />
+    </fragment>
 </navigation>

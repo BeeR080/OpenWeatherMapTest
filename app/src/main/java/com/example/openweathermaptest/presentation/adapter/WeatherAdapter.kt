@@ -11,8 +11,9 @@ import com.example.openweathermaptest.data.model.WeatherList
 import com.example.openweathermaptest.databinding.WeatherListBinding
 import com.example.openweathermaptest.utills.DateUtils
 import com.example.openweathermaptest.utills.WeatherDiffUtil
+import com.google.android.material.animation.AnimatableView.Listener
 
-class WeatherAdapter(): ListAdapter<WeatherList,WeatherAdapter.MyViewHolder>(WeatherDiffUtil()) {
+class WeatherAdapter(private val clickListener:OnItemClick): ListAdapter<WeatherList,WeatherAdapter.MyViewHolder>(WeatherDiffUtil()) {
 
 
 
@@ -28,9 +29,18 @@ class WeatherAdapter(): ListAdapter<WeatherList,WeatherAdapter.MyViewHolder>(Wea
             mainfragTvPressure.text = "${currentItem.main.pressure} гПа"
             mainfragTvWindSpeed.text = "${currentItem.wind!!.speed} м/c"
 
+
         }
 
+       init {
+           binding.mainfragCard.setOnClickListener {
+               clickListener.onClickItem(currentList[adapterPosition])
+           }
+       }
+
     }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherAdapter.MyViewHolder {
         val view =LayoutInflater.from(parent.context).inflate(
@@ -46,6 +56,10 @@ class WeatherAdapter(): ListAdapter<WeatherList,WeatherAdapter.MyViewHolder>(Wea
          holder.bind(getItem(position))
 
 
+    }
+
+    interface OnItemClick{
+        fun onClickItem(weatherList: WeatherList)
     }
 
 
