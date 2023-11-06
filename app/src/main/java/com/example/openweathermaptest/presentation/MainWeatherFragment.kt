@@ -6,11 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.ListFragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.openweathermaptest.WeatherResult
 import com.example.openweathermaptest.WeatherViewModel
 import com.example.openweathermaptest.data.model.WeatherFiveDays
+import com.example.openweathermaptest.data.model.WeatherList
 import com.example.openweathermaptest.databinding.FragmentMainWeatherBinding
 import com.example.openweathermaptest.presentation.adapter.WeatherAdapter
 import com.example.openweathermaptest.utills.DateUtils
@@ -42,7 +48,7 @@ class MainWeatherFragment : Fragment() {
     private fun getWeather(lat:Double,lon:Double){
         weatherVM.getWeather(lat = lat,lon= lon)
         weatherVM.getWeather.observe(viewLifecycleOwner){weather->
-val list = weather.data!!.list.toList()
+        val list = weather.data!!.list.toList()
 
 
 
@@ -67,7 +73,22 @@ val list = weather.data!!.list.toList()
 
 
     private fun initAdapter(){
-        adapter = WeatherAdapter()
+        adapter = WeatherAdapter(object :WeatherAdapter.OnItemClick{
+            override fun onClickItem(weatherList: WeatherList) {
+                Toast.makeText(
+                    requireContext(),
+                    "clickOn : ${weatherList.dt}",
+                    Toast.LENGTH_SHORT)
+                    .show()
+                val action =
+                    MainWeatherFragmentDirections
+                        .actionHomeFragmentToDetailWeatherFragment(weatherList)
+                findNavController().navigate(action)
+
+            }
+
+
+        })
         val recyclerView = binding.recycler
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

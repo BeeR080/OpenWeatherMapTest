@@ -1,7 +1,10 @@
 package com.example.openweathermaptest.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Main(
     @SerializedName("feels_like")
     val feelslike: Double?,
@@ -21,4 +24,4 @@ data class Main(
     val tempmax: Double?,
     @SerializedName("temp_min")
     val tempmin: Double?
-)
+):Parcelable
