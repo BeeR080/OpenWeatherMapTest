@@ -1,4 +1,4 @@
-package com.example.openweathermaptest.data.model
+package com.example.openweathermaptest.data.model.remote
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

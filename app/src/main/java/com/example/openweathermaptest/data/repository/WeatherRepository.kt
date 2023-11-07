@@ -2,11 +2,13 @@ package com.example.openweathermaptest.data.repository
 
 import com.example.openweathermaptest.WeatherResponse
 import com.example.openweathermaptest.WeatherResult
-import com.example.openweathermaptest.data.model.WeatherFiveDays
+import com.example.openweathermaptest.data.model.local.WeatherListLoc
+import com.example.openweathermaptest.data.model.remote.WeatherFiveDays
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource
 ):WeatherResponse() {
 
     suspend fun getWeather(lat:Double,lon:Double):WeatherResult<WeatherFiveDays>{
@@ -16,5 +18,8 @@ class WeatherRepository @Inject constructor(
         }
 
     }
+    suspend fun addWeather(weatherList: WeatherListLoc) = localDataSource.addWeather(weatherList)
+
+     fun getWeather() = localDataSource.getWeather()
 
 }

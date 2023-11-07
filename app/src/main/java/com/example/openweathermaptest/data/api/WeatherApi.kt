@@ -1,7 +1,6 @@
 package com.example.openweathermaptest.data.api
 
-import com.example.openweathermaptest.data.model.WeatherFiveDays
-import kotlinx.coroutines.flow.Flow
+import com.example.openweathermaptest.data.model.remote.WeatherFiveDays
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

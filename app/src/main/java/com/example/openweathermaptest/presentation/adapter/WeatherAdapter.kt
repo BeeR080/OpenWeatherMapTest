@@ -3,15 +3,13 @@ package com.example.openweathermaptest.presentation.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.openweathermaptest.R
-import com.example.openweathermaptest.data.model.WeatherList
+import com.example.openweathermaptest.data.model.remote.WeatherList
 import com.example.openweathermaptest.databinding.WeatherListBinding
 import com.example.openweathermaptest.utills.DateUtils
 import com.example.openweathermaptest.utills.WeatherDiffUtil
-import com.google.android.material.animation.AnimatableView.Listener
 
 class WeatherAdapter(private val clickListener:OnItemClick): ListAdapter<WeatherList,WeatherAdapter.MyViewHolder>(WeatherDiffUtil()) {
 

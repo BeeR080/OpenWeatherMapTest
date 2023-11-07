@@ -1,7 +1,7 @@
 package com.example.openweathermaptest.utills
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.openweathermaptest.data.model.WeatherList
+import com.example.openweathermaptest.data.model.remote.WeatherList
 
 class WeatherDiffUtil : DiffUtil.ItemCallback<WeatherList>(){
 

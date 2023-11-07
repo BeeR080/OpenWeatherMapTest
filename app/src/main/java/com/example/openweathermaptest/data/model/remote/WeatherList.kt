@@ -1,4 +1,4 @@
-package com.example.openweathermaptest.data.model
+package com.example.openweathermaptest.data.model.remote
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
@@ -22,7 +22,7 @@ data class WeatherList(
     @SerializedName("visibility")
     val visibility: Int?,
     @SerializedName("weather")
-    val weather: ArrayList<Weather>,
+    val weather: ArrayList<Weather>?,
     @SerializedName("wind")
     val wind: Wind?,
 ):Parcelable

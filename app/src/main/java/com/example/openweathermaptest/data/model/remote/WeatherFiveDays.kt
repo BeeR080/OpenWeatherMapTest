@@ -1,8 +1,11 @@
-package com.example.openweathermaptest.data.model
+package com.example.openweathermaptest.data.model.remote
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
-data class WeatherResp(
+@Parcelize
+data class WeatherFiveDays(
     @SerializedName("city")
     val city: City?,
     @SerializedName("cnt")
@@ -10,7 +13,7 @@ data class WeatherResp(
     @SerializedName("cod")
     val cod: String?,
     @SerializedName("list")
-    val list: ArrayList<WeatherFiveDays>,
+    val list: ArrayList<WeatherList>,
     @SerializedName("message")
     val message: Int?
-)
+):Parcelable

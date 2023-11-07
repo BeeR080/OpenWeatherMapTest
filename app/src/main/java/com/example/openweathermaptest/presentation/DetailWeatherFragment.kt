@@ -33,7 +33,7 @@ getDetailWeather()
     @SuppressLint("SetTextI18n")
     private fun getDetailWeather()= with(binding){
             detailFragTvDate.text = " ${DateUtils.dateFormat(args.currentWeather.dttTxt)}"
-            detailFragTvDescription.text = " ${args.currentWeather.weather[0].description}"
+            detailFragTvDescription.text = " ${args.currentWeather.weather?.get(0)?.description}"
             detailFragTvPressure.text = resources
                 .getString(R.string.pressure)+ " ${args.currentWeather.main?.pressure.toString()} гПа"
             detailFragTvHumidity.text = resources
