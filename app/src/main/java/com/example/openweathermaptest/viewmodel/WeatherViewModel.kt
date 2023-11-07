@@ -1,8 +1,9 @@
-package com.example.openweathermaptest
+package com.example.openweathermaptest.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.openweathermaptest.WeatherResult
 import com.example.openweathermaptest.data.model.local.WeatherListLoc
 import com.example.openweathermaptest.data.model.remote.WeatherFiveDays
 import com.example.openweathermaptest.domain.usecases.AddWeatherUseCase

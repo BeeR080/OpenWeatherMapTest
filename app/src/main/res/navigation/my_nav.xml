@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_main_weather" >
         <action
             android:id="@+id/one_dest"
-            app:destination="@id/emptyFragment" />
+            app:destination="@id/emptyFragment"
+            />
         <action
             android:id="@+id/action_homeFragment_to_detailWeatherFragment"
             app:destination="@id/detailWeatherFragment" />
@@ -21,6 +22,8 @@
         android:id="@+id/emptyFragment"
         android:name="com.example.openweathermaptest.presentation.EmptyFragment"
         android:label="fragment_empty"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/homeFragment"
         tools:layout="@layout/fragment_empty" />
     <fragment
         android:id="@+id/detailWeatherFragment"

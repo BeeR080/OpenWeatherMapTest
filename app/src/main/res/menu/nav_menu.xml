@@ -12,17 +12,17 @@
 
         />
     <item
-        android:id="@+id/one_dest"
+        android:id="@+id/two_dest"
         android:title="@string/two"
         android:icon="@drawable/ic_sun"
         tools:ignore="DuplicateIds" />
     <item
-        android:id="@+id/one_dest"
+        android:id="@+id/three_dest"
         android:title="@string/three"
         android:icon="@drawable/ic_sun"
         tools:ignore="DuplicateIds" />
     <item
-        android:id="@+id/one_dest"
+        android:id="@+id/four_dest"
         android:title="@string/four"
         android:icon="@drawable/ic_sun"
         tools:ignore="DuplicateIds" />

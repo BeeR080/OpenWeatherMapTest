@@ -16,8 +16,14 @@ data class WeatherListLoc(
     val humidity:String,
     val tMin:Int,
     val tMax:Int,
+    val tCur:Int,
     val pressure:Int,
     val speed:Int,
+    val cityName:String,
+    val feelsLike:Int,
+    val visibility: Int,
+    val description:String,
+
 
 
 ):Parcelable
