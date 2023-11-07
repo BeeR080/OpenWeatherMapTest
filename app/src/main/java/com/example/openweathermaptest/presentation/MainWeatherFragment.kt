@@ -83,7 +83,6 @@ class MainWeatherFragment : Fragment() {
         weatherVM.getWeather(lat = lat,lon= lon)
         weatherVM.getWeather.observe(viewLifecycleOwner){weather->
         //binding.mainfragTvCity.text = weather.data?.city?.name
-        createJsonFiel(weather)
         val list = weather.data!!.list.toList()
             CoroutineScope(Dispatchers.IO).launch {
                 for (i in list){
@@ -241,36 +240,7 @@ private fun initLocationRequest():com.google.android.gms.location.LocationReques
     }
 
 
-    private fun createJsonFiel(weather:WeatherResult<WeatherFiveDays>){
 
-        var json = JSONObject()
-        val list = WeatherFiveDays(
-            city = weather.data?.city,
-            cnt = weather.data?.cnt,
-            cod = weather.data?.cod ,
-            list = weather.data!!.list,
-            message = weather.data.message,
-        )
-        json.put("weather",list)
-        saveJson(json.toString())
-    }
-
-    private fun saveJson(jsonString:String){
-        val output:Writer
-        val file = createFile()
-        output = BufferedWriter(FileWriter(file))
-        output.write(jsonString)
-        output.close()
-    }
-
-    private fun createFile(): File {
-        val fileName = "weatherJson.json"
-        val storageDir = File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),fileName)
-        if(!storageDir!!.exists()){
-            storageDir.mkdir()
-        }
-        return File.createTempFile(fileName,".json",storageDir)
-    }
 
 
 
