@@ -2,15 +2,15 @@ package com.example.openweathermaptest.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.example.openweathermaptest.R
 import com.example.openweathermaptest.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -34,12 +34,12 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController
         NavigationUI.setupWithNavController(bottomNav,navController)
-setup(bottomNav)
-        //bottomNav.setupWithNavController(navController = navController)
+        setupBottomNav(bottomNav)
+
 
     }
 
-    private fun setup(bottomNavigation:BottomNavigationView){
+    private fun setupBottomNav(bottomNavigation:BottomNavigationView){
         bottomNavigation.setOnItemSelectedListener(object :BottomNavigationView.OnNavigationItemSelectedListener{
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when(item.itemId){
@@ -52,6 +52,17 @@ setup(bottomNav)
                 }
 
                 return true } })
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if(destination.id == R.id.detailWeatherFragment) {
+                window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+                bottomNavigation.visibility = View.GONE
+            } else {
+
+                bottomNavigation.visibility = View.VISIBLE
+                window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            }
+        }
 
     }
 

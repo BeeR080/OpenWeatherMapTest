@@ -13,6 +13,8 @@
         <action
             android:id="@+id/one_dest"
             app:destination="@id/emptyFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/homeFragment"
             />
         <action
             android:id="@+id/action_homeFragment_to_detailWeatherFragment"

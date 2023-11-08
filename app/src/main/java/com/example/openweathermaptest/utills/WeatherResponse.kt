@@ -1,11 +1,11 @@
-package com.example.openweathermaptest
+package com.example.openweathermaptest.utills
 
 import retrofit2.Response
 import java.lang.Exception
 
 abstract class WeatherResponse {
 
-    suspend fun <T> safeRespons(response:suspend () -> Response<T>):WeatherResult<T>{
+    suspend fun <T> safeRespons(response:suspend () -> Response<T>): WeatherResult<T> {
 
         try {
 

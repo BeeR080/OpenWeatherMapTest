@@ -1,8 +1,10 @@
 package com.example.openweathermaptest.presentation
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,12 +17,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.openweathermaptest.WeatherResult
+import com.example.openweathermaptest.utills.WeatherResult
 import com.example.openweathermaptest.viewmodel.WeatherViewModel
 import com.example.openweathermaptest.data.model.local.WeatherListLoc
 import com.example.openweathermaptest.data.model.remote.Main
 import com.example.openweathermaptest.data.model.remote.Weather
-
+import com.example.openweathermaptest.data.model.remote.WeatherFiveDays
 import com.example.openweathermaptest.data.model.remote.WeatherList
 import com.example.openweathermaptest.data.model.remote.Wind
 import com.example.openweathermaptest.databinding.FragmentMainWeatherBinding
@@ -44,7 +46,7 @@ class MainWeatherFragment : Fragment() {
     private val weatherVM by viewModels<WeatherViewModel>()
     private val geoService by lazy{LocationServices.getFusedLocationProviderClient(requireContext())}
     private val locationRequest by lazy{initLocationRequest()}
-    private lateinit var mLocation:Location
+    private lateinit var locationManager:LocationManager
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var locationCallback: LocationCallback
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -64,18 +66,25 @@ class MainWeatherFragment : Fragment() {
         fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(requireContext())
 
         initAdapter()
+        checkGps()
         getWeather()
 
         return binding.root
     }
 
 
-
-
-
-
+   private fun checkGps(){
+    locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    val gpsStatus =locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    if(gpsStatus){
+      getWeather()
+    }else{
+        getWeatherLocal()
+    }
+}
 
     private fun getWeather(){
+
         locationCallback = object: LocationCallback(){
             override fun onLocationResult(geo: LocationResult) {
                 for (location in geo.locations){
@@ -84,86 +93,21 @@ class MainWeatherFragment : Fragment() {
             }
         }
 
+
         weatherVM.getWeather.observe(viewLifecycleOwner){weather->
 
    when(weather){
 
         is WeatherResult.Success ->{
-            stopLoading()
-            binding.mainfragTvCity.text = weather.data?.city?.name
-            val list = weather.data!!.list.toList()
-            CoroutineScope(Dispatchers.IO).launch {
-                for (i in list){
-                    val dbList = WeatherListLoc(
-                        id = i.dt!!,
-                        date = i.dttTxt!! ,
-                        humidity = i.main!!.humidity.toString(),
-                        tMin = i.main.tempmin!!.toInt(),
-                        tMax = i.main.tempmax!!.toInt(),
-                        pressure = i.main.pressure!! ,
-                        speed = i.wind!!.speed!!.toInt(),
-                        tCur = i.main.temp!!.toInt(),
-                        cityName = weather.data!!.city!!.name.toString() ,
-                        feelsLike = i.main.feelslike!!.toInt() ,
-                        visibility = i.visibility!!.toInt(),
-                        description = i.weather!![0].description.toString()
 
-                    )
-                    weatherVM.addWeather(dbList)
-
-                }
-
-            }
-            adapter.submitList(list)
+           getWeatherRemote(weather)
 
         }
 
         is WeatherResult.Error ->{
-            stopLoading()
-
-            weatherVM.getLocWeather.observe(viewLifecycleOwner){ weatherLoc->
-                val list = mutableListOf<WeatherList>()
-                for (data in weatherLoc){
-                    binding.mainfragTvCity.text = data.cityName
-                    list.add(
-                        WeatherList(
-                            clouds = null ,
-                            dt = data.id,
-                            dttTxt = data.date,
-                            main = Main(
-                                feelslike = data.feelsLike.toDouble(),
-                                grndlevel = null,
-                                humidity = data.humidity.toInt(),
-                                pressure = data.pressure,
-                                sealevel = null,
-                                temp = data.tCur.toDouble(),
-                                tempkf = null,
-                                tempmax = data.tMax.toDouble(),
-                                tempmin = data.tMin.toDouble()
-
-                            ),
-                            pop = null,
-                            sys = null,
-                            visibility = data.visibility,
-                            weather = arrayListOf<Weather>(
-                                Weather(
-                                description = data.description,
-                                icon = null,
-                                id = null,
-                                main = null)
-                            ),
-                            wind = Wind(
-                                deg = null,
-                                gust = null,
-                                speed = data.speed.toDouble()
-                            ),
-                        )
+            getWeatherLocal()
 
 
-                    )
-                    adapter.submitList(list)
-                }
-            }
         }
 
         is WeatherResult.Loading -> {
@@ -174,6 +118,85 @@ class MainWeatherFragment : Fragment() {
 
         }
 
+
+    }
+
+    private fun getWeatherRemote(weather: WeatherResult<WeatherFiveDays>){
+        stopLoading()
+        binding.mainfragTvCity.text = weather.data?.city?.name
+        val list = weather.data!!.list.toList()
+        CoroutineScope(Dispatchers.IO).launch {
+            for (i in list){
+                val dbList = WeatherListLoc(
+                    id = i.dt!!,
+                    date = i.dttTxt!! ,
+                    humidity = i.main!!.humidity.toString(),
+                    tMin = i.main.tempmin!!.toInt(),
+                    tMax = i.main.tempmax!!.toInt(),
+                    pressure = i.main.pressure!! ,
+                    speed = i.wind!!.speed!!.toInt(),
+                    tCur = i.main.temp!!.toInt(),
+                    cityName = weather.data.city!!.name.toString() ,
+                    feelsLike = i.main.feelslike!!.toInt() ,
+                    visibility = i.visibility!!.toInt(),
+                    description = i.weather!![0].description.toString()
+
+                )
+                weatherVM.addWeather(dbList)
+
+            }
+
+        }
+        adapter.submitList(list)
+    }
+
+    private fun getWeatherLocal(){
+        stopLoading()
+        weatherVM.getLocWeather.observe(viewLifecycleOwner){ weatherLoc->
+
+            binding.mainfragTvCity.text = weatherLoc[0].cityName
+            val list = mutableListOf<WeatherList>()
+            for (data in weatherLoc){
+
+                list.add(
+                    WeatherList(
+                        clouds = null ,
+                        dt = data.id,
+                        dttTxt = data.date,
+                        main = Main(
+                            feelslike = data.feelsLike.toDouble(),
+                            grndlevel = null,
+                            humidity = data.humidity.toInt(),
+                            pressure = data.pressure,
+                            sealevel = null,
+                            temp = data.tCur.toDouble(),
+                            tempkf = null,
+                            tempmax = data.tMax.toDouble(),
+                            tempmin = data.tMin.toDouble()
+
+                        ),
+                        pop = null,
+                        sys = null,
+                        visibility = data.visibility,
+                        weather = arrayListOf<Weather>(
+                            Weather(
+                                description = data.description,
+                                icon = null,
+                                id = null,
+                                main = null)
+                        ),
+                        wind = Wind(
+                            deg = null,
+                            gust = null,
+                            speed = data.speed.toDouble()
+                        ),
+                    )
+
+
+                )
+                adapter.submitList(list)
+            }
+        }
     }
 
     private fun startLoading(){
@@ -213,15 +236,17 @@ class MainWeatherFragment : Fragment() {
 
 
 
+    @SuppressLint("MissingPermission")
     private fun registerPermissons() {
         pLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) {
                 if (it) {
+
                     geoService.requestLocationUpdates(locationRequest,locationCallback,null)
 
 
                 } else {
-                    checkLockPermissions()
+
 
                 }
             }

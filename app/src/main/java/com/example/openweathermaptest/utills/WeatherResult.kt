@@ -1,4 +1,4 @@
-package com.example.openweathermaptest
+package com.example.openweathermaptest.utills
 
 sealed class WeatherResult<T> (
     val data :T? = null,
@@ -7,6 +7,6 @@ sealed class WeatherResult<T> (
 
  class Success<T>(data:T?): WeatherResult<T>(data = data)
  class Error<T>(data: T?,message: String?): WeatherResult<T>(data = data,message = message)
- class Loading<T>():WeatherResult<T>()
+ class Loading<T>(): WeatherResult<T>()
 
 }
