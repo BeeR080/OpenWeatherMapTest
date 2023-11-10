@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.openweathermaptest.presentation.MainWeatherFragment"
+        android:name="com.example.openweathermaptest.presentation.ui.fragments.MainWeatherFragment"
         android:label="fragment_main_weather"
         tools:layout="@layout/fragment_main_weather" >
         <action
@@ -22,18 +22,18 @@
     </fragment>
     <fragment
         android:id="@+id/emptyFragment"
-        android:name="com.example.openweathermaptest.presentation.EmptyFragment"
+        android:name="com.example.openweathermaptest.presentation.ui.fragments.EmptyFragment"
         android:label="fragment_empty"
         app:launchSingleTop="true"
         app:popUpTo="@id/homeFragment"
         tools:layout="@layout/fragment_empty" />
     <fragment
         android:id="@+id/detailWeatherFragment"
-        android:name="com.example.openweathermaptest.presentation.DetailWeatherFragment"
+        android:name="com.example.openweathermaptest.presentation.ui.fragments.DetailWeatherFragment"
         android:label="fragment_detail_weather"
         tools:layout="@layout/fragment_detail_weather" >
         <argument
             android:name="currentWeather"
-            app:argType="com.example.openweathermaptest.data.model.remote.WeatherList" />
+            app:argType="com.example.openweathermaptest.data.model.remoteDto.detail.WeatherListDto" />
     </fragment>
 </navigation>
