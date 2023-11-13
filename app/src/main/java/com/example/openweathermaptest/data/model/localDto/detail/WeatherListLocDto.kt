@@ -25,8 +25,6 @@ data class WeatherListLocDto(
 
 ):Parcelable
 
-
-
 fun toWeatherList(){}
 
 

@@ -1,11 +1,13 @@
 package com.example.openweathermaptest.presentation
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.example.openweathermaptest.domain.model.local.WeatherListLoc
+import com.example.openweathermaptest.domain.model.remote.WeatherFiveDays
 import com.example.openweathermaptest.utills.WeatherResult
-import com.example.openweathermaptest.data.model.localDto.main.WeatherListLocDto
-import com.example.openweathermaptest.data.model.remoteDto.main.WeatherFiveDaysDto
 import com.example.openweathermaptest.domain.usecases.AddWeatherUseCase
 import com.example.openweathermaptest.domain.usecases.GetLocWeatherUseCase
 import com.example.openweathermaptest.domain.usecases.GetWeatherUseCase
@@ -24,12 +26,10 @@ class WeatherViewModel @Inject constructor(
 
 
 
-    private val _getWeather = MutableLiveData<WeatherFiveDaysDto?>()
-
-
+    private val _getWeather = MutableLiveData<WeatherFiveDays?>()
     val getWeather get() = _getWeather
 
-    private val _getLocWeather = getLocWeatherUseCase.invoke()
+    private val _getLocWeather = MutableLiveData<List<WeatherListLoc>>()
     val getLocWeather get() = _getLocWeather
 
 
@@ -38,12 +38,14 @@ class WeatherViewModel @Inject constructor(
             getWeatherUseCase.invoke(lat = lat, lon = lon).let {result->
                 when(result){
                     is WeatherResult.Success->{
-                        _getWeather.value = result.data
+                        _getWeather.value = result.data.let {
+                            it?.toWeatherFiveDays()
+                        }
                     }
                     is WeatherResult.Error->{
-                     _getWeather.value = null
+
                     }
-                    is WeatherResult.Loading->{}
+                    else -> {}
                 }
 
 
@@ -53,15 +55,24 @@ class WeatherViewModel @Inject constructor(
 
     }
 
+    fun getWeatherLoc(){
+        viewModelScope.launch {
+            getLocWeatherUseCase.invoke().let { data->
+                _getLocWeather.value = data.value?.map { it.toWeatherList() }
+            }
+        }
+    }
 
 
 
-    suspend fun addWeather(weatherList: WeatherListLocDto){
+
+    suspend fun addWeather(weatherList: WeatherListLoc){
         viewModelScope.launch(Dispatchers.IO) {
-            addWeatherUseCase.invoke(weatherList)
+            addWeatherUseCase.invoke(weatherList.let {
+            it.toWeatherListDto()
+            })
         }
 
     }
-
 
 }

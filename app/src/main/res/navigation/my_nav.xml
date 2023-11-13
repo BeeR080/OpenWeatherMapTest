@@ -34,6 +34,6 @@
         tools:layout="@layout/fragment_detail_weather" >
         <argument
             android:name="currentWeather"
-            app:argType="com.example.openweathermaptest.data.model.remoteDto.detail.WeatherListDto" />
+            app:argType="com.example.openweathermaptest.domain.model.remote.WeatherList" />
     </fragment>
 </navigation>

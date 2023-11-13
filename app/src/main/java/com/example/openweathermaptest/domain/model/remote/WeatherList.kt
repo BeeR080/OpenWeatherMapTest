@@ -1,11 +1,6 @@
 package com.example.openweathermaptest.domain.model.remote
 
 import android.os.Parcelable
-import com.example.openweathermaptest.data.model.remoteDto.detail.CloudsDto
-import com.example.openweathermaptest.data.model.remoteDto.detail.MainDto
-import com.example.openweathermaptest.data.model.remoteDto.detail.SysDto
-import com.example.openweathermaptest.data.model.remoteDto.detail.WeatherDto
-import com.example.openweathermaptest.data.model.remoteDto.detail.WindDto
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
@@ -18,11 +13,11 @@ data class WeatherList(
     @SerializedName("dt_txt")
     val dttTxt: String?,
     @SerializedName("main")
-    val main: MainDto?,
+    val main: Main?,
     @SerializedName("visibility")
     val visibility: Int?,
     @SerializedName("weather")
-    val weather: ArrayList<WeatherDto>?,
+    val weather: ArrayList<Weather>?,
     @SerializedName("wind")
-    val wind: WindDto?,
+    val wind: Wind?,
 ):Parcelable

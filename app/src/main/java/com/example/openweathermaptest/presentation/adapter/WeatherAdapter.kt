@@ -8,17 +8,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.openweathermaptest.R
 import com.example.openweathermaptest.data.model.remoteDto.detail.WeatherListDto
 import com.example.openweathermaptest.databinding.WeatherListBinding
+import com.example.openweathermaptest.domain.model.remote.WeatherList
 import com.example.openweathermaptest.utills.DateUtils
 import com.example.openweathermaptest.utills.WeatherDiffUtil
 
-class WeatherAdapter(private val clickListener: OnItemClick): ListAdapter<WeatherListDto, WeatherAdapter.MyViewHolder>(WeatherDiffUtil()) {
+class WeatherAdapter(private val clickListener: OnItemClick): ListAdapter<WeatherList, WeatherAdapter.MyViewHolder>(WeatherDiffUtil()) {
 
 
 
    inner class MyViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         private val binding = WeatherListBinding.bind(itemView)
 
-        fun bind(weatherFiveDays: WeatherListDto) = with(binding){
+        fun bind(weatherFiveDays: WeatherList) = with(binding){
             val currentItem = currentList[adapterPosition]
             mainfragTvDate.text = currentItem.dttTxt?.let { DateUtils.dateFormat(it) }
             mainfragTvHumidity.text = "${currentItem.main!!.humidity} %"
@@ -57,7 +58,7 @@ class WeatherAdapter(private val clickListener: OnItemClick): ListAdapter<Weathe
     }
 
     interface OnItemClick{
-        fun onClickItem(weatherList: WeatherListDto)
+        fun onClickItem(weatherList: WeatherList)
     }
 
 

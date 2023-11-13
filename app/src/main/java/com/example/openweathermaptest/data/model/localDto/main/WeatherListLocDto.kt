@@ -3,6 +3,7 @@ package com.example.openweathermaptest.data.model.localDto.main
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.openweathermaptest.domain.model.local.WeatherListLoc
 import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "weather_table")
@@ -23,11 +24,30 @@ data class WeatherListLocDto(
 
 
 
-):Parcelable
+):Parcelable{
+    fun toWeatherList():WeatherListLoc{
+        return WeatherListLoc(
+            id = id,
+            date = date,
+            humidity = humidity,
+            tMin = tMin,
+            tMax = tMax,
+            tCur = tCur,
+            pressure = pressure,
+            speed = speed,
+            cityName = cityName,
+            feelsLike = feelsLike,
+            visibility = visibility,
+            description = description
+
+            )
+
+    }
+}
 
 
 
-fun toWeatherList(){}
+
 
 
 

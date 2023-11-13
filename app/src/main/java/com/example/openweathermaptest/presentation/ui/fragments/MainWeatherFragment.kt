@@ -18,13 +18,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.openweathermaptest.presentation.WeatherViewModel
-import com.example.openweathermaptest.data.model.localDto.main.WeatherListLocDto
-import com.example.openweathermaptest.data.model.remoteDto.detail.MainDto
-import com.example.openweathermaptest.data.model.remoteDto.detail.WeatherDto
-import com.example.openweathermaptest.data.model.remoteDto.main.WeatherFiveDaysDto
-import com.example.openweathermaptest.data.model.remoteDto.detail.WeatherListDto
-import com.example.openweathermaptest.data.model.remoteDto.detail.WindDto
 import com.example.openweathermaptest.databinding.FragmentMainWeatherBinding
+import com.example.openweathermaptest.domain.model.remote.Main
+import com.example.openweathermaptest.domain.model.remote.Weather
+import com.example.openweathermaptest.domain.model.remote.WeatherFiveDays
+import com.example.openweathermaptest.domain.model.remote.WeatherList
+import com.example.openweathermaptest.domain.model.remote.Wind
 
 
 import com.example.openweathermaptest.presentation.adapter.WeatherAdapter
@@ -33,9 +32,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -78,143 +74,66 @@ class MainWeatherFragment : Fragment() {
     locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
     val gpsStatus =locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     if(gpsStatus){
-      getWeather()
-    }else{
-        getWeatherLocal()
+        startLoading()
+    getWeather()
+}else{
+    getWeatherLocal()
+}
+}
+
+private fun getWeather(){
+
+    locationCallback = object: LocationCallback(){
+        override fun onLocationResult(geo: LocationResult) {
+            for (location in geo.locations){
+                weatherVM.getWeather(lat = location.latitude ,lon= location.longitude)
+            }
+        }
+    }
+
+
+    weatherVM.getWeather.observe(viewLifecycleOwner){weather->
+        getWeatherRemote(weather!!)
+
+    }
+
+
+}
+
+private fun getWeatherRemote(weather: WeatherFiveDays){
+    stopLoading()
+    binding.mainfragTvCity.text = weather.city?.name
+    adapter.submitList(weather.list)
+
+
+}
+
+private fun getWeatherLocal(){
+    weatherVM.getWeatherLoc()
+    stopLoading()
+    weatherVM.getLocWeather.observe(viewLifecycleOwner){ weatherLoc->
+
+        binding.mainfragTvCity.text = weatherLoc[0].cityName
+        adapter.submitList(weatherLoc.map { it.toWeatherListAdapter() })
+
     }
 }
 
-    private fun getWeather(){
+private fun startLoading(){
+    binding.mainfragCircle.visibility = View.VISIBLE
+    binding.mainfragCityCard.visibility = View.GONE
 
-        locationCallback = object: LocationCallback(){
-            override fun onLocationResult(geo: LocationResult) {
-                for (location in geo.locations){
-                    weatherVM.getWeather(lat = location.latitude ,lon= location.longitude)
-                }
-            }
-        }
+}
 
-
-        weatherVM.getWeather.observe(viewLifecycleOwner){weather->
-
-          /* when(weather){
-               is  ->{}
-           }
-*/
-/*   when(weather){
-
-        is WeatherResult.Success -> {}
-
-        is WeatherResult.Error ->{
-            getWeatherLocal()
+private fun stopLoading(){
+    binding.mainfragCircle.visibility = View.GONE
+    binding.mainfragCityCard.visibility = View.VISIBLE
+}
 
 
-        }
-
-        is WeatherResult.Loading -> {
-            startLoading()
-
-        }
-    }*/
-
-        }
-
-
-    }
-
-    private fun getWeatherRemote(weather: WeatherFiveDaysDto){
-        stopLoading()
-        binding.mainfragTvCity.text = weather.city?.name
-        val list = weather!!.list.toList()
-        CoroutineScope(Dispatchers.IO).launch {
-            for (i in list){
-                val dbList = WeatherListLocDto(
-                    id = i.dt!!,
-                    date = i.dttTxt!! ,
-                    humidity = i.main!!.humidity.toString(),
-                    tMin = i.main.tempmin!!.toInt(),
-                    tMax = i.main.tempmax!!.toInt(),
-                    pressure = i.main.pressure!! ,
-                    speed = i.wind!!.speed!!.toInt(),
-                    tCur = i.main.temp!!.toInt(),
-                    cityName = weather.city!!.name.toString() ,
-                    feelsLike = i.main.feelslike!!.toInt() ,
-                    visibility = i.visibility!!.toInt(),
-                    description = i.weather!![0].description.toString()
-
-                )
-                weatherVM.addWeather(dbList)
-
-            }
-
-        }
-        adapter.submitList(list)
-    }
-
-    private fun getWeatherLocal(){
-        stopLoading()
-        weatherVM.getLocWeather.observe(viewLifecycleOwner){ weatherLoc->
-
-            binding.mainfragTvCity.text = weatherLoc[0].cityName
-            val list = mutableListOf<WeatherListDto>()
-            for (data in weatherLoc){
-
-                list.add(
-                    WeatherListDto(
-                        clouds = null ,
-                        dt = data.id,
-                        dttTxt = data.date,
-                        main = MainDto(
-                            feelslike = data.feelsLike.toDouble(),
-                            grndlevel = null,
-                            humidity = data.humidity.toInt(),
-                            pressure = data.pressure,
-                            sealevel = null,
-                            temp = data.tCur.toDouble(),
-                            tempkf = null,
-                            tempmax = data.tMax.toDouble(),
-                            tempmin = data.tMin.toDouble()
-
-                        ),
-                        pop = null,
-                        sys = null,
-                        visibility = data.visibility,
-                        weather = arrayListOf<WeatherDto>(
-                            WeatherDto(
-                                description = data.description,
-                                icon = null,
-                                id = null,
-                                main = null)
-                        ),
-                        wind = WindDto(
-                            deg = null,
-                            gust = null,
-                            speed = data.speed.toDouble()
-                        ),
-                    )
-
-
-                )
-                adapter.submitList(list)
-            }
-        }
-    }
-
-    private fun startLoading(){
-        binding.mainfragCircle.visibility = View.VISIBLE
-        binding.mainfragCityCard.visibility = View.GONE
-
-    }
-
-    private fun stopLoading(){
-        binding.mainfragCircle.visibility = View.GONE
-        binding.mainfragCityCard.visibility = View.VISIBLE
-    }
-
-
-    private fun initAdapter(){
+private fun initAdapter(){
         adapter = WeatherAdapter(object : WeatherAdapter.OnItemClick{
-            override fun onClickItem(weatherList: WeatherListDto) {
+            override fun onClickItem(weatherList: WeatherList) {
                 Toast.makeText(
                     requireContext(),
                     "clickOn : ${weatherList.dt}",

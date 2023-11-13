@@ -1,6 +1,8 @@
 package com.example.openweathermaptest.di.modules
 
 import android.app.Application
+import com.example.openweathermaptest.domain.model.local.WeatherDao
+import com.example.openweathermaptest.domain.model.local.WeatherDataBase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
