@@ -11,8 +11,10 @@ abstract class  WeatherResponse {
 
             val response = response()
             if(response.isSuccessful){
+
                 val body = response.body()
                 body.let {
+                    WeatherResult.Loading(null)
                     return WeatherResult.Success(data = body)
                 }
 

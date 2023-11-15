@@ -1,9 +1,10 @@
 package com.example.openweathermaptest.domain.model.remote
 
 import android.os.Parcelable
+import com.example.openweathermaptest.domain.model.local.WeatherListLoc
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-
+import kotlin.math.roundToInt
 
 
 @Parcelize
@@ -20,4 +21,10 @@ data class WeatherList(
     val weather: ArrayList<Weather>?,
     @SerializedName("wind")
     val wind: Wind?,
-):Parcelable
+):Parcelable{
+
+
+    }
+
+
+

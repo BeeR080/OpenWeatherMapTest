@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
+
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,23 +16,21 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.openweathermaptest.presentation.WeatherViewModel
 import com.example.openweathermaptest.databinding.FragmentMainWeatherBinding
-import com.example.openweathermaptest.domain.model.remote.Main
-import com.example.openweathermaptest.domain.model.remote.Weather
 import com.example.openweathermaptest.domain.model.remote.WeatherFiveDays
 import com.example.openweathermaptest.domain.model.remote.WeatherList
-import com.example.openweathermaptest.domain.model.remote.Wind
-
-
 import com.example.openweathermaptest.presentation.adapter.WeatherAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
+
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -57,32 +56,34 @@ class MainWeatherFragment : Fragment() {
     ): View {
         _binding = FragmentMainWeatherBinding.inflate(inflater, container, false)
 
-
-        registerPermissons()
-        checkLockPermissions()
         fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(requireContext())
 
         initAdapter()
         checkGps()
-        getWeather()
 
         return binding.root
     }
 
 
+
+
    private fun checkGps(){
+
     locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    val gpsStatus =locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    val gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
     if(gpsStatus){
-        startLoading()
-    getWeather()
+        registerPermissons()
+        checkLockPermissions()
+        getWeather()
+
 }else{
     getWeatherLocal()
 }
 }
 
 private fun getWeather(){
-
+    startLoading()
     locationCallback = object: LocationCallback(){
         override fun onLocationResult(geo: LocationResult) {
             for (location in geo.locations){
@@ -90,8 +91,6 @@ private fun getWeather(){
             }
         }
     }
-
-
     weatherVM.getWeather.observe(viewLifecycleOwner){weather->
         getWeatherRemote(weather!!)
 
@@ -104,18 +103,22 @@ private fun getWeatherRemote(weather: WeatherFiveDays){
     stopLoading()
     binding.mainfragTvCity.text = weather.city?.name
     adapter.submitList(weather.list)
+    lifecycleScope.launch {
+            weatherVM.addWeather(weather)
+
+    }
+
 
 
 }
 
 private fun getWeatherLocal(){
+
     weatherVM.getWeatherLoc()
-    stopLoading()
     weatherVM.getLocWeather.observe(viewLifecycleOwner){ weatherLoc->
 
-        binding.mainfragTvCity.text = weatherLoc[0].cityName
-        adapter.submitList(weatherLoc.map { it.toWeatherListAdapter() })
-
+        adapter.submitList(weatherLoc)
+        stopLoading()
     }
 }
 
@@ -162,9 +165,7 @@ private fun initAdapter(){
         pLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) {
                 if (it) {
-
                     geoService.requestLocationUpdates(locationRequest,locationCallback,null)
-
 
                 } else {
 
@@ -206,7 +207,6 @@ private fun initAdapter(){
     }
 
 }
-
 
 
 

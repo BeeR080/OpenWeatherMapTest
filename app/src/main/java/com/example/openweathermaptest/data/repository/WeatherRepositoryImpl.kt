@@ -7,6 +7,7 @@ import com.example.openweathermaptest.data.RemoteDataSource
 import com.example.openweathermaptest.data.model.localDto.main.WeatherListLocDto
 import com.example.openweathermaptest.data.model.remoteDto.main.WeatherFiveDaysDto
 import com.example.openweathermaptest.domain.model.local.WeatherListLoc
+import com.example.openweathermaptest.domain.model.remote.WeatherList
 import com.example.openweathermaptest.domain.model.repository.WeatherRepository
 import com.example.openweathermaptest.utills.WeatherResponse
 import com.example.openweathermaptest.utills.WeatherResult
@@ -28,8 +29,8 @@ class WeatherRepositoryImpl @Inject constructor(
         localDataSource.addWeather(weatherList = weatherList)
     }
 
-    override fun getWeatherLocal(): LiveData<List<WeatherListLocDto>> {
-        return  localDataSource.getWeather()
+    override fun getWeatherLocal(): List<WeatherListLocDto> {
+        return localDataSource.getWeather()
     }
 
 

@@ -7,6 +7,6 @@ sealed class WeatherResult<T> (
 
  class Success<T>(data:T?): WeatherResult<T>(data = data)
  class Error<T>(data: T?,message: String?): WeatherResult<T>(data = data,message = message)
- class Loading<T>(): WeatherResult<T>()
+ class Loading<T>(data: T? = null): WeatherResult<T>(data = data)
 
 }
