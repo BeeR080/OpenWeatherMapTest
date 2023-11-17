@@ -2,9 +2,7 @@ package com.example.openweathermaptest.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.example.openweathermaptest.domain.model.local.WeatherListLoc
 import com.example.openweathermaptest.domain.model.remote.WeatherFiveDays
 import com.example.openweathermaptest.domain.model.remote.WeatherList
 import com.example.openweathermaptest.utills.WeatherResult
@@ -38,15 +36,14 @@ class WeatherViewModel @Inject constructor(
             getWeatherUseCase.invoke(lat = lat, lon = lon).let {result->
                 when(result){
                     is WeatherResult.Success->{
-
                         _getWeather.value = result.data.let {
                             it?.toWeatherFiveDays()
                         }
                     }
                     is WeatherResult.Error->{
-
+                    _getWeather.value = WeatherFiveDays(null,ArrayList())
                     }
-                    else -> {}
+                    is WeatherResult.Loading->{}
                 }
 
 

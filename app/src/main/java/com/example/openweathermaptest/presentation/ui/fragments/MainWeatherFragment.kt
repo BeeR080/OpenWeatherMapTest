@@ -77,10 +77,13 @@ class MainWeatherFragment : Fragment() {
         checkLockPermissions()
         getWeather()
 
-}else{
-    getWeatherLocal()
-}
-}
+    }else{
+
+
+        getWeatherLocal()
+    }
+
+   }
 
 private fun getWeather(){
     startLoading()
@@ -92,7 +95,14 @@ private fun getWeather(){
         }
     }
     weatherVM.getWeather.observe(viewLifecycleOwner){weather->
-        getWeatherRemote(weather!!)
+        if (weather?.list?.isNotEmpty() == true){
+
+            getWeatherRemote(weather)
+        }else
+        {
+            getWeatherLocal()
+        }
+
 
     }
 
@@ -113,12 +123,20 @@ private fun getWeatherRemote(weather: WeatherFiveDays){
 }
 
 private fun getWeatherLocal(){
-
     weatherVM.getWeatherLoc()
     weatherVM.getLocWeather.observe(viewLifecycleOwner){ weatherLoc->
+        if (weatherLoc.isNotEmpty()){
+            binding.mainfragTvCity.text = weatherLoc[0].cityName
+            adapter.submitList(weatherLoc)
+            stopLoading()
+        }
+        else{
+            Toast.makeText(
+                requireContext(),
+                "Для работы приложения необходимо включить геолокацию и интернет",
+                Toast.LENGTH_LONG).show()
+        }
 
-        adapter.submitList(weatherLoc)
-        stopLoading()
     }
 }
 

@@ -40,7 +40,8 @@ data class WeatherListDto(
             main = main,
             visibility = visibility,
             weather = weather,
-            wind = wind
+            wind = wind,
+            cityName = ""
         )
 
     }

@@ -56,7 +56,8 @@ data class WeatherListLocDto(
                 deg = null,
                 gust = null,
                 speed = speed.toDouble()
-                )
+                ),
+            cityName = cityName
 
         )
     }
